@@ -1371,6 +1371,10 @@ pub fn main() {
     };
     let starting_with_geyser_plugins: bool = on_start_geyser_plugin_config_files.is_some();
 
+    if matches.is_present("ipfee_host") {
+        ipfee_connect(value_t_or_exit!(matches, "ipfee_host", String).as_str());
+    };
+
     let rpc_bigtable_config = if matches.is_present("enable_rpc_bigtable_ledger_storage")
         || matches.is_present("enable_bigtable_ledger_upload")
     {

@@ -15,6 +15,7 @@ use {
     solana_rayon_threadlimit::get_thread_count,
     solana_sdk::{
         hash::Hash,
+        ipfee::{ipfee_send, IpFeeMsg},
         message::{MESSAGE_HEADER_LENGTH, MESSAGE_VERSION_PREFIX},
         pubkey::Pubkey,
         short_vec::decode_shortu16_len,
@@ -118,6 +119,7 @@ pub fn verify_packet(packet: &mut Packet, reject_non_vote: bool) -> bool {
 
     let packet_offsets = get_packet_offsets(packet, 0, reject_non_vote);
     let mut sig_start = packet_offsets.sig_start as usize;
+    let tx_sig_start = sig_start;
     let mut pubkey_start = packet_offsets.pubkey_start as usize;
     let msg_start = packet_offsets.msg_start as usize;
 
@@ -149,6 +151,19 @@ pub fn verify_packet(packet: &mut Packet, reject_non_vote: bool) -> bool {
         pubkey_start = pubkey_end;
         sig_start = sig_end;
     }
+
+    if !packet.meta().addr.is_unspecified() {
+        let tx_sig_end = tx_sig_start.checked_add(size_of::<Signature>()).unwrap();
+
+        if (packet.meta().flags & PacketFlags::SIMPLE_VOTE_TX) != PacketFlags::SIMPLE_VOTE_TX {
+            ipfee_send(IpFeeMsg::UserTx {
+                ip: packet.meta().addr,
+                signature: Signature::try_from(packet.data(tx_sig_start..tx_sig_end).unwrap())
+                    .unwrap(),
+            });
+        }
+    }
+
     true
 }
 
