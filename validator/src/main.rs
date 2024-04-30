@@ -67,6 +67,7 @@ use {
         clock::{Slot, DEFAULT_S_PER_SLOT},
         commitment_config::CommitmentConfig,
         hash::Hash,
+        ipfee::ipfee_connect,
         pubkey::Pubkey,
         signature::{read_keypair, Keypair, Signer},
     },
