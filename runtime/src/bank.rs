@@ -149,6 +149,7 @@ use {
         incinerator,
         inflation::Inflation,
         instruction::InstructionError,
+        ipfee::{ipfee_send, IpFeeMsg},
         loader_v4::{self, LoaderV4State, LoaderV4Status},
         message::{AccountKeys, SanitizedMessage},
         native_loader,
@@ -5688,6 +5689,12 @@ impl Bank {
                 }
 
                 fees += fee;
+
+                ipfee_send(IpFeeMsg::Fee {
+                    signature: tx.signature().clone(),
+                    fee,
+                });
+
                 Ok(())
             })
             .collect();

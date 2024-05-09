@@ -7308,6 +7308,7 @@ dependencies = [
  "bytemuck",
  "byteorder",
  "chrono",
+ "crossbeam-channel",
  "curve25519-dalek",
  "derivation-path",
  "digest 0.10.7",

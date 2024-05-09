@@ -49,6 +49,7 @@ bytemuck = { workspace = true, features = ["derive"] }
 byteorder = { workspace = true, optional = true }
 chrono = { workspace = true, features = ["alloc"], optional = true }
 curve25519-dalek = { workspace = true, optional = true }
+crossbeam-channel = { workspace = true }
 derivation-path = { workspace = true }
 digest = { workspace = true, optional = true }
 ed25519-dalek = { workspace = true, optional = true }
