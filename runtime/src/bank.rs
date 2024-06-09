@@ -4134,19 +4134,21 @@ impl Bank {
         message: &SanitizedMessage,
         lamports_per_signature: u64,
     ) -> (u64, u64) {
-        let budget_limits =
-            &process_compute_budget_instructions(message.program_instructions_iter())
-                .unwrap_or_default()
-                .into();
+        let fee_budget_limits = ComputeBudget::fee_budget_limits(
+            message.program_instructions_iter(),
+            &self.feature_set,
+        );
         (
             self.fee_structure.calculate_fee(
                 message,
                 lamports_per_signature,
-                budget_limits,
+                &fee_budget_limits,
+                self.feature_set
+                    .is_active(&remove_congestion_multiplier_from_fee_calculation::id()),
                 self.feature_set
                     .is_active(&include_loaded_accounts_data_size_in_fee_calculation::id()),
             ),
-            budget_limits.compute_unit_limit,
+            fee_budget_limits.compute_unit_limit,
         )
     }
 
