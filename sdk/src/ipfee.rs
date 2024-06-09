@@ -13,9 +13,17 @@ use {
 // timestamp in all messages is number of milliseconds since Unix Epoch
 pub enum IpFeeMsg {
     // A user tx was received from the remote peer
-    UserTx { ip: IpAddr, signature: Signature },
+    UserTx {
+        ip: IpAddr,
+        signature: Signature,
+    },
     // A tx was executed and paid a fee
-    Fee { signature: Signature, fee: u64 },
+    Fee {
+        signature: Signature,
+        cu_limit: u64,
+        cu_used: u64,
+        fee: u64,
+    },
 }
 
 // Logs an error and does nothing for all calls beyond the first

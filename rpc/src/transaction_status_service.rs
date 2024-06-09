@@ -114,7 +114,7 @@ impl TransactionStatusService {
                             ),
                         }
                         .expect("lamports_per_signature must be available");
-                        let fee = bank.get_fee_for_message_with_lamports_per_signature(
+                        let (fee, _) = bank.get_fee_for_message_with_lamports_per_signature(
                             transaction.message(),
                             lamports_per_signature,
                         );
